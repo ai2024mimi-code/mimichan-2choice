@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>みみちゃん♡2択恋愛診断</title>
+<meta name="description" content="あなたは今、待つべき？動くべき？2択でサクッと恋の流れを診断。結果の続きはLINEで♡">
+<!-- SNSでシェアされた時の見え方（必要なら差し替えOK） -->
+<meta property="og:title" content="みみちゃん♡2択恋愛診断">
+<meta property="og:description" content="待つ？それとも動く？2択でサクッと診断。続きはLINEで♡">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f8a5c2">
+
+<style>
+:root{
+  --pink:#f8a5c2;  /* やさしいピンク */
+  --hot:#f48fb1;   /* 少し濃いピンク（枠線など） */
+  --ink:#333;
+  --card:#fff;
+  --bg:#fff6fb;
+  --shadow:0 10px 25px rgba(255,79,161,.18);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+  color:var(--ink); background:
+    radial-gradient(900px 500px at 80% -10%, #ffe3f1 0%, transparent 60%),
+    radial-gradient(1000px 600px at -10% 110%, #ffeaf6 0%, transparent 60%), var(--bg);
+  display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.app{
+  width:min(720px,100%); background:var(--card); border-radius:22px; box-shadow:var(--shadow);
+  padding:22px 18px 24px; position:relative; overflow:hidden; border:1px solid #ffe5f1;
+}
+h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:var(--hot)}
+.lead{margin:0; text-align:center; opacity:.9}
+.q{margin:14px 0 12px; text-align:center; font-weight:700; font-size:clamp(18px,4vw,22px); color:#a4005a}
+.choices{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 6px}
+.btn{
+  border:2px solid var(--hot); background:var(--pink); color:#fff; font-weight:700;
+  padding:12px 16px; border-radius:999px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,.06);
+  transition:transform .04s, filter .2s; font-size:16px; text-decoration:none; display:inline-block;
+}
+.btn:active{ transform:translateY(1px) scale(.99) }
+.btn.ghost{ background:#fff; color:var(--hot) }
+.sep{height:1px; background:#ffe1ef; margin:14px 0}
+
+#resultBox{ display:none }
+.resultTitle{ font-weight:700; color:#a4005a; display:flex; align-items:center; gap:8px; margin:4px 0 8px }
+.resultText{ font-size:16px; line-height:1.8 }
+.tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+.tag{ padding:6px 10px; background:#fff0f7; border:1px dashed #ffc2df; border-radius:999px; font-size:13px }
+
+.ctaBlock{ margin-top:14px; background:#fff; border:1px solid #ffe5f1; border-radius:16px; padding:12px 12px 14px }
+.ctaTitle{ font-weight:700; color:#a4005a; margin-bottom:8px; display:flex; align-items:center; gap:8px }
+.ctaRow{ display:flex; flex-direction:column; gap:8px }
+.cta{ @apply btn; } /* コメント：見やすさ用。実際は下の .cta で上書き */
+.cta{
+  border:2px solid var(--hot); background:var(--pink); color:#fff; text-align:center;
+  padding:12px 16px; border-radius:999px; font-weight:700; text-decoration:none; display:block;
+}
+.note{ font-size:12px; opacity:.75; margin-top:6px; text-align:center }
+.footer{ text-align:center; font-size:12px; opacity:.65; margin-top:12px }
+.small{ font-size:12px; opacity:.85 }
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-live="polite">
+    <h1>みみちゃん♡2択恋愛診断</h1>
+    <p class="lead">直感で選んでね。AかBかで、今の“恋の流れ”が分かるよ。</p>
+
+    <div class="q">Q. 今のあなたに合うのは…？</div>
+    <div class="choices">
+      <button class="btn" onclick="choose('A')">A：やさしく“待つ”</button>
+      <button class="btn" onclick="choose('B')">B：小さく“動く”</button>
+    </div>
+
+    <div id="resultBox">
+      <div class="sep"></div>
+      <div class="resultTitle">💖 診断結果</div>
+      <div id="resultText" class="resultText">—</div>
+      <div class="tags" id="luckyTags"></div>
+
+      <div class="ctaBlock">
+        <div class="ctaTitle">💌 続きはここから（おすすめの流れ）</div>
+        <div class="ctaRow">
+          <!-- ① LINE登録（あなたのLINE登録URLに差し替え） -->
+          <a class="cta" id="ctaLine" href="#" target="_blank" rel="noopener">① LINEで“本格みみちゃん占い”を受け取る</a>
+
+          <!-- ② マッチングアプリ（アフィ1）※あなたのURLをセット済み -->
+          <a class="cta" id="ctaApp" href="https://wild-durian-7e0.notion.site/40-50-256f18996dfa80ab818bc8cead4ed590?source=copy_link" target="_blank" rel="noopener nofollow">② 出会いの可能性を広げる（おすすめアプリ）</a>
+
+          <!-- ③ 別占い（アフィ2）※差し替え推奨：あなたのアフィURL -->
+          <a class="cta" id="ctaUranai" href="#" target="_blank" rel="noopener nofollow">③ 他の占いも試してみる（提携占い）</a>
+
+          <!-- ④ 無料相談（30分）※あなたのCalendlyをセット済み -->
+          <a class="cta" id="ctaConsult" href="https://calendly.com/ai2024mimi/30" target="_blank" rel="noopener">④ 個別相談（無料30分）で“私の場合”を相談</a>
+        </div>
+        <div class="note">※ 焦らなくて大丈夫。あなたのペースでOKです。</div>
+      </div>
+
+      <p class="small" id="shareHint" style="text-align:center; margin-top:10px;">診断が当たってたら、Threadsに感想のせてね♡</p>
+    </div>
+
+    <div class="footer">© mimi-chan uranai</div>
+  </div>
+
+<script>
+/* ===== 設定：リンク類（あとで差し替えしやすいようにまとめ） ===== */
+const LINKS = {
+  // ★ここをあなたのLINE登録URLに差し替え（例：公式LINEのLiffや友だち追加リンク）
+  line: "https://line.me/R/ti/p/xxxxxxxx",        // ← ← ← 差し替え！
+
+  // マッチングアプリ（アフィ1）→ すでにあなたのURLをセット済み
+  app: "https://wild-durian-7e0.notion.site/40-50-256f18996dfa80ab818bc8cead4ed590?source=copy_link",
+
+  // 別の占い（アフィ2）→ あなたのアフィURLに差し替え
+  uranai: "https://example.com/affiliate-uranai", // ← ← ← 差し替え！
+
+  // 無料相談（30分）→ すでにあなたのCalendlyをセット済み
+  consult: "https://calendly.com/ai2024mimi/30"
+};
+
+/* ===== 2択の結果テンプレ ===== */
+const RESULT = {
+  A: [
+    "“待つ”は愛への信頼。今日は【受け取る力】が整う日。やさしい言葉・小さなお誘いをキャッチして💐",
+    "無理に動かなくても大丈夫。あなたの落ち着きが魅力を増す日。心地よい距離感がご縁を守ります。"
+  ],
+  B: [
+    "“動く”は未来への合図。今日は【小さな一歩】がご縁を進める日。5行メッセージやお礼のひと言が◎",
+    "勇気は“1ミリ”でOK。今日は短い連絡・軽いお誘いが有効。あなたの誠実さがきちんと伝わります。"
+  ]
+};
+
+const LUCKY = {
+  A: [
+    ["🎨 カラー","さくらピンク"],["🎁 アイテム","ハンドクリーム"],["📍 スポット","静かな角席"]
+  ],
+  B: [
+    ["🎨 カラー","ミントグリーン"],["🎁 アイテム","小さな鏡"],["📍 スポット","カフェの窓際"]
+  ]
+};
+
+/* ===== ユーティリティ ===== */
+const $ = s => document.querySelector(s);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function withParams(url, params){
+  try{
+    const u = new URL(url, location.href);
+    Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+    return u.toString();
+  }catch(e){ return url; }
+}
+
+/* ===== メイン：選択処理 ===== */
+function choose(choice){
+  // 結果生成
+  const text = pick(RESULT[choice] || RESULT.A);
+  $("#resultText").textContent = text;
+
+  // ラッキータグ
+  const luck = LUCKY[choice] || LUCKY.A;
+  const wrap = $("#luckyTags"); wrap.innerHTML="";
+  luck.forEach(([label,val])=>{
+    const tag = document.createElement("span");
+    tag.className="tag"; tag.textContent = `${label}: ${val}`;
+    wrap.appendChild(tag);
+  });
+
+  // CTAリンク：choice/utm を自動付与（計測しやすく）
+  const utm = { utm_source:"threads", utm_medium:"2choice", utm_campaign:"mimichan_entry", choice };
+  $("#ctaLine").href    = withParams(LINKS.line,    utm);
+  $("#ctaApp").href     = withParams(LINKS.app,     utm);
+  $("#ctaUranai").href  = withParams(LINKS.uranai,  utm);
+  $("#ctaConsult").href = withParams(LINKS.consult, utm);
+
+  // 表示
+  $("#resultBox").style.display = "block";
+  // 結果までスクロール（スマホで見やすく）
+  $("#resultBox").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+// 念のためグローバル公開（環境依存対策）
+window.choose = choose;
+</script>
+</body>
+</html>
