@@ -3,15 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>みみちゃん♡2択恋愛診断</title>
 <meta name="description" content="直感でAかBを選ぶだけ。今の恋の流れをサクッと診断。結果の続きはLINEで♡">
+
+<!-- Open Graph（Threadsのリンクプレビュー用） -->
 <meta property="og:title" content="みみちゃん♡2択恋愛診断">
-<meta property="og:description" content="待つ？動く？2択でサクッと診断。続きはLINEで♡">
+<meta property="og:description" content="待つ？動く？2択でサクッと診断。直感でA/Bを選ぶだけ。スマホ最適化・毎日OK。続きはLINEで♡">
 <meta property="og:type" content="website">
-<!-- ★ 追加：OGのURL/画像（絶対URL） -->
 <meta property="og:url" content="https://ai2024mimi-code.github.io/mimichan-2choice/">
 <meta property="og:image" content="https://ai2024mimi-code.github.io/mimichan-2choice/og-image.jpg">
+<meta property="og:site_name" content="みみちゃん占い">
+<meta property="og:locale" content="ja_JP">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="みみちゃん♡2択恋愛診断">
+<meta name="twitter:description" content="直感でA/Bを選ぶだけ。今の恋の流れをサクッと診断。続きはLINEで♡">
+<meta name="twitter:image" content="https://ai2024mimi-code.github.io/mimichan-2choice/og-image.jpg">
+
+<link rel="canonical" href="https://ai2024mimi-code.github.io/mimichan-2choice/">
 <meta name="theme-color" content="#f8a5c2">
+<meta name="format-detection" content="telephone=no">
+
 <style>
 :root{
   --pink:#f8a5c2;  /* やさしいピンク */
@@ -30,11 +44,14 @@ body{
     radial-gradient(900px 500px at 80% -10%, #ffe3f1 0%, transparent 60%),
     radial-gradient(1000px 600px at -10% 110%, #ffeaf6 0%, transparent 60%),
     var(--bg);
-  display:flex; align-items:center; justify-content:center; padding:16px;
+  /* ★ スマホで切れないように通常フローに */
+  display:block;
+  padding:16px;
 }
 .app{
   width:min(720px,100%); background:var(--card); border-radius:22px; border:1px solid #ffe5f1;
   box-shadow:var(--shadow); padding:22px 18px 24px; position:relative; overflow:hidden;
+  margin:16px auto; /* 中央寄せ */
 }
 h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:var(--hot)}
 .lead{margin:0; text-align:center; opacity:.9}
@@ -54,11 +71,17 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
 
 .resultTitle{ font-weight:700; color:#a4005a; display:flex; align-items:center; gap:8px; margin:4px 0 8px }
 .resultText{ font-size:16px; line-height:1.8 }
-.tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
-.tag{ padding:6px 10px; background:#fff0f7; border:1px dashed #ffc2df; border-radius:999px; font-size:13px }
 
+/* ★ ピンクのタグ（丸ピル）は廃止 → スタイルも削除OKだが残しても影響なし */
+
+/* 見出しデザイン（流用） */
 .ctaBlock{ margin-top:14px; background:#fff; border:1px solid #ffe5f1; border-radius:16px; padding:12px 12px 14px }
 .ctaTitle{ font-weight:700; color:#a4005a; margin-bottom:8px; display:flex; align-items:center; gap:8px }
+
+/* ★ ラッキーポイント（本文） */
+.luckyList { margin: 6px 0 10px; }
+.luckyList p { margin: 4px 0; font-size:16px; line-height:1.8; }
+
 .ctaCol{ display:flex; flex-direction:column; gap:8px }
 .cta{
   border:2px solid var(--hot); background:var(--pink); color:#fff; text-align:center;
@@ -66,13 +89,9 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
 }
 .note{ font-size:12px; opacity:.75; margin-top:6px; text-align:center }
 .footer{ text-align:center; font-size:12px; opacity:.65; margin-top:12px }
-.small{ fontサイズ:12px; opacity:.85; text-align:center; margin-top:10px }
+.small{ font-size:12px; opacity:.85; text-align:center; margin-top:10px }
 .reset{ margin-top:10px; text-align:center }
 .reset .btn{ background:#fff; color:var(--hot) }
-
-/* ★ 追加：ラッキーポイントの本文（見出しは .ctaTitle を流用） */
-.luckyList{ margin:6px 0 10px; }
-.luckyList p{ margin:4px 0; font-size:16px; line-height:1.8; }
 </style>
 </head>
 <body>
@@ -94,9 +113,8 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
       <div class="sep"></div>
       <div class="resultTitle">💖 診断結果</div>
       <div id="resultText" class="resultText">—</div>
-      <div class="tags" id="luckyTags"></div>
 
-      <!-- ★ 追加：🎯ラッキーポイント（見出しスタイルは .ctaTitle と同じ） -->
+      <!-- ★ 🎯ラッキーポイント：テキストのみ表示（ダブり解消） -->
       <div id="luckyPanel">
         <div class="ctaTitle">🎯 ラッキーポイント</div>
         <div class="luckyList" id="luckyList"></div>
@@ -105,13 +123,9 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
       <div class="ctaBlock">
         <div class="ctaTitle">💌 続きはここから（おすすめの流れ）</div>
         <div class="ctaCol">
-          <!-- ① LINE -->
           <a class="cta" id="ctaLine" href="#" target="_blank" rel="noopener">① “みみちゃん占い”アプリ<br>本格・毎日版をLINEで始める</a>
-          <!-- ② 連携占い -->
           <a class="cta" id="ctaUranai" href="#" target="_blank" rel="noopener nofollow">② 本格占いを試す<br>（連携・通話対応）</a>
-          <!-- ③ アプリ -->
           <a class="cta" id="ctaApp" href="#" target="_blank" rel="noopener nofollow">③ 出会いの可能性を広げる<br>（おすすめアプリ）</a>
-          <!-- ④ みみちゃん相談 -->
           <a class="cta" id="ctaConsult" href="#" target="_blank" rel="noopener">④ みみちゃんに相談する<br>（初回30分無料）</a>
         </div>
         <div class="note">※ 焦らなくて大丈夫。あなたのペースでOKです。</div>
@@ -127,10 +141,10 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
 <script>
 /* ===== 設定：リンク ===== */
 const LINKS = {
-  line: "https://lin.ee/oGt4Qr9e",  // ← ご指定のLINE
-  uranai: "https://wild-durian-7e0.notion.site/257f18996dfa80a2a54fe7714630052a?source=copy_link", // ← ご指定の連携占い
-  app: "https://wild-durian-7e0.notion.site/40-50-256f18996dfa80ab818bc8cead4ed590?source=copy_link", // 既存のおすすめアプリ
-  consult: "https://wild-durian-7e0.notion.site/30-25af18996dfa8010acbccc521eb99f89?source=copy_link" // みみちゃん相談(無料30分)
+  line: "https://lin.ee/oGt4Qr9e",
+  uranai: "https://wild-durian-7e0.notion.site/257f18996dfa80a2a54fe7714630052a?source=copy_link",
+  app: "https://wild-durian-7e0.notion.site/40-50-256f18996dfa80ab818bc8cead4ed590?source=copy_link",
+  consult: "https://wild-durian-7e0.notion.site/30-25af18996dfa8010acbccc521eb99f89?source=copy_link"
 };
 
 /* ===== 質問プール（20） ===== */
@@ -216,20 +230,12 @@ function choose(choice){
   const text = pick(RESULT_TEXT[choice] || RESULT_TEXT.A);
   $("#resultText").textContent = text;
 
-  // ラッキー（ピル表示）
-  const wrap = $("#luckyTags"); wrap.innerHTML="";
+  // 🎯 ラッキーポイント本文（テキストのみ）
   const luck = [
     ["🎨 カラー", pick(LUCKY_COLORS)],
     ["🧸 アイテム", pick(LUCKY_ITEMS)],
     ["📍 スポット", pick(LUCKY_SPOTS)]
   ];
-  luck.forEach(([label,val])=>{
-    const tag=document.createElement("span");
-    tag.className="tag"; tag.textContent=`${label}: ${val}`;
-    wrap.appendChild(tag);
-  });
-
-  // ★ 追加：🎯ラッキーポイント本文（見出しは .ctaTitle）
   const list = $("#luckyList");
   list.innerHTML = `
     <p>🎨 カラー: ${luck[0][1]}</p>
@@ -237,15 +243,16 @@ function choose(choice){
     <p>📍 スポット: ${luck[2][1]}</p>
   `;
 
-  // CTAリンク（順番は ①LINE → ②連携占い → ③アプリ → ④相談）
+  // CTAリンク
   const utm = { utm_source:"threads", utm_medium:"2choice", utm_campaign:"mimichan_entry", choice };
   $("#ctaLine").href    = withParams(LINKS.line,    utm);
   $("#ctaUranai").href  = withParams(LINKS.uranai,  utm);
   $("#ctaApp").href     = withParams(LINKS.app,     utm);
   $("#ctaConsult").href = withParams(LINKS.consult, utm);
 
-  // 結果を表示
+  // 結果を表示して最上部へ（スマホで「診断結果」が切れないように）
   $("#resultArea").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ===== もう一問 ===== */
@@ -253,7 +260,6 @@ function resetAll(){
   $("#resultArea").classList.add("hidden");
   setRandomQuestion();
   $("#qArea").classList.remove("hidden");
-  // 画面の先頭へ軽く戻す（上部が見切れにくい）
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
@@ -264,9 +270,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   $("#btnB").addEventListener("click", ()=>choose('B'));
   $("#again").addEventListener("click", resetAll);
 });
-
-// 念のためグローバル公開（万一の環境用）
-window.choose = choose;
 </script>
 </body>
 </html>
