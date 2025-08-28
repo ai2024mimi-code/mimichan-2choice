@@ -8,6 +8,9 @@
 <meta property="og:title" content="みみちゃん♡2択恋愛診断">
 <meta property="og:description" content="待つ？動く？2択でサクッと診断。続きはLINEで♡">
 <meta property="og:type" content="website">
+<!-- ★ 追加：OGのURL/画像（絶対URL） -->
+<meta property="og:url" content="https://ai2024mimi-code.github.io/mimichan-2choice/">
+<meta property="og:image" content="https://ai2024mimi-code.github.io/mimichan-2choice/og-image.jpg">
 <meta name="theme-color" content="#f8a5c2">
 <style>
 :root{
@@ -63,9 +66,13 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
 }
 .note{ font-size:12px; opacity:.75; margin-top:6px; text-align:center }
 .footer{ text-align:center; font-size:12px; opacity:.65; margin-top:12px }
-.small{ font-size:12px; opacity:.85; text-align:center; margin-top:10px }
+.small{ fontサイズ:12px; opacity:.85; text-align:center; margin-top:10px }
 .reset{ margin-top:10px; text-align:center }
 .reset .btn{ background:#fff; color:var(--hot) }
+
+/* ★ 追加：ラッキーポイントの本文（見出しは .ctaTitle を流用） */
+.luckyList{ margin:6px 0 10px; }
+.luckyList p{ margin:4px 0; font-size:16px; line-height:1.8; }
 </style>
 </head>
 <body>
@@ -88,6 +95,12 @@ h1{margin:6px 0 8px; text-align:center; font-size:clamp(22px,4.5vw,28px); color:
       <div class="resultTitle">💖 診断結果</div>
       <div id="resultText" class="resultText">—</div>
       <div class="tags" id="luckyTags"></div>
+
+      <!-- ★ 追加：🎯ラッキーポイント（見出しスタイルは .ctaTitle と同じ） -->
+      <div id="luckyPanel">
+        <div class="ctaTitle">🎯 ラッキーポイント</div>
+        <div class="luckyList" id="luckyList"></div>
+      </div>
 
       <div class="ctaBlock">
         <div class="ctaTitle">💌 続きはここから（おすすめの流れ）</div>
@@ -203,7 +216,7 @@ function choose(choice){
   const text = pick(RESULT_TEXT[choice] || RESULT_TEXT.A);
   $("#resultText").textContent = text;
 
-  // ラッキー
+  // ラッキー（ピル表示）
   const wrap = $("#luckyTags"); wrap.innerHTML="";
   const luck = [
     ["🎨 カラー", pick(LUCKY_COLORS)],
@@ -216,6 +229,14 @@ function choose(choice){
     wrap.appendChild(tag);
   });
 
+  // ★ 追加：🎯ラッキーポイント本文（見出しは .ctaTitle）
+  const list = $("#luckyList");
+  list.innerHTML = `
+    <p>🎨 カラー: ${luck[0][1]}</p>
+    <p>🧸 アイテム: ${luck[1][1]}</p>
+    <p>📍 スポット: ${luck[2][1]}</p>
+  `;
+
   // CTAリンク（順番は ①LINE → ②連携占い → ③アプリ → ④相談）
   const utm = { utm_source:"threads", utm_medium:"2choice", utm_campaign:"mimichan_entry", choice };
   $("#ctaLine").href    = withParams(LINKS.line,    utm);
@@ -223,7 +244,7 @@ function choose(choice){
   $("#ctaApp").href     = withParams(LINKS.app,     utm);
   $("#ctaConsult").href = withParams(LINKS.consult, utm);
 
-  // 結果を表示（スクロールはせず、画面レイアウトのまま＝上部が隠れない）
+  // 結果を表示
   $("#resultArea").classList.remove("hidden");
 }
 
